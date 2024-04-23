@@ -59,8 +59,6 @@ const InvokeFunction = ({
   const { rejectRequest, approveRequest } = useWalletConnectWallet()
   const [loading, setLoading] = useState(false)
   const [fee, setFee] = useState()
-  const [transactionHash, setTransactionHash] = useState()
-  const [errorMessage, setErrorMessage] = useState()
 
   const witnessScope = useMemo(
     () => {
@@ -136,9 +134,19 @@ const InvokeFunction = ({
         hideNotification(notificationId)
       }
 
-      setTransactionHash(result)
+      history.push({
+        pathname: ROUTES.DAPP_REQUEST_RESULT,
+        state: {
+          content: <InvokeResult transactionHash={result} />,
+        },
+      })
     } catch (error) {
-      setErrorMessage(error.message)
+      history.push({
+        pathname: ROUTES.DAPP_REQUEST_RESULT,
+        state: {
+          content: <InvokeResult errorMessage={error.message} />,
+        },
+      })
     } finally {
       setLoading(false)
     }
@@ -153,11 +161,6 @@ const InvokeFunction = ({
 
   return loading ? (
     <ConnectionLoader />
-  ) : transactionHash || errorMessage ? (
-    <InvokeResult
-      transactionHash={transactionHash}
-      errorMessage={errorMessage}
-    />
   ) : (
     <FullHeightPanel
       headerText="Wallet Connect"

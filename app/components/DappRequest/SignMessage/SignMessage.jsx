@@ -17,7 +17,6 @@ import WarningIcon from '../../../assets/icons/warning.svg'
 import Confirm from '../../../assets/icons/confirm_connection.svg'
 import Deny from '../../../assets/icons/deny_connection.svg'
 import ConnectionLoader from '../../ConnectDapp/ConnectionLoader'
-import MessageSuccess from '../MessageSuccess'
 
 type Props = {
   request: TSessionRequest,
@@ -39,7 +38,6 @@ const VerifyMessage = ({
   const { approveRequest, rejectRequest } = useWalletConnectWallet()
 
   const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
 
   const reject = () => {
     rejectRequest(request)
@@ -53,7 +51,11 @@ const VerifyMessage = ({
     try {
       setLoading(true)
       await approveRequest(request)
-      setSuccess(true)
+
+      history.push({
+        pathname: ROUTES.DAPP_REQUEST_RESULT,
+        state: { content: 'You have successfully signed your message' },
+      })
     } catch (error) {
       showErrorNotification({ message: error.message })
       history.push(ROUTES.DASHBOARD)
@@ -64,9 +66,7 @@ const VerifyMessage = ({
 
   if (loading) return <ConnectionLoader />
 
-  return success ? (
-    <MessageSuccess text="You have successfully signed your message" />
-  ) : (
+  return (
     <FullHeightPanel
       headerText="Wallet Connect"
       renderCloseButton={() => (

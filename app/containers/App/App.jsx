@@ -115,6 +115,20 @@ const App = ({
   useEffect(
     () => {
       async function handle() {
+        // It is necessary to wait for the request result page to be rendered
+        await new Promise(resolve => setTimeout(resolve, 1000))
+
+        if (history.location.pathname === ROUTES.DAPP_REQUEST) {
+          if (
+            !requests.some(
+              request => request.id === history.location?.state?.request.id,
+            )
+          ) {
+            history.push(ROUTES.DASHBOARD)
+          }
+          return
+        }
+
         const request = requests[0]
         if (!request) return
 
@@ -124,19 +138,6 @@ const App = ({
         if (!session) return
 
         ipc.invoke('restore')
-
-        // It check if the current page is the request page and if the request passed to page is different from the first request in the queue, that is, the passed request has already been accepted or rejected and there is another request in the queue
-        // If it is, it waits 1 second and go back to the previous page, then it waits 1 second and go to the request page with the new request
-        // Waits are for a better user experience
-        // Go back is necessary because it is not possible to go to the same page with a different state, if you do this the state will not be updated
-        if (
-          history.location.pathname === ROUTES.DAPP_REQUEST &&
-          history.location?.state?.request.id !== request.id
-        ) {
-          await new Promise(resolve => setTimeout(resolve, 1000))
-          history.goBack()
-          await new Promise(resolve => setTimeout(resolve, 1000))
-        }
 
         history.push({
           pathname: ROUTES.DAPP_REQUEST,
