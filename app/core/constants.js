@@ -160,6 +160,7 @@ export const ROUTES = {
   CONNECT_DAPP: '/connect-dapp',
   DAPP_REQUEST: '/dapp-request',
   NFT: '/NFT',
+  DAPP_REQUEST_RESULT: '/dapp-request-result',
 }
 
 export const NOTIFICATION_LEVELS = {

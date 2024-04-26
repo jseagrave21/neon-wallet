@@ -192,6 +192,7 @@ export const walletConnectOptions: TInitOptions = {
         'decryptFromArray',
         'calculateFee',
         'signTransaction',
+        'wipeRequests',
       ],
       autoAcceptMethods: [
         'testInvoke',
@@ -199,6 +200,7 @@ export const walletConnectOptions: TInitOptions = {
         'getNetworkVersion',
         'traverseIterator',
         'calculateFee',
+        'wipeRequests',
       ],
       adapter: new WalletConnectNeonAdapter(),
     },

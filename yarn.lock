@@ -2328,10 +2328,10 @@
     "@cityofzion/neo3-parser" "1.6.0"
     "@cityofzion/neon-js" "^5.3.0"
 
-"@cityofzion/wallet-connect-sdk-core@3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@cityofzion/wallet-connect-sdk-core/-/wallet-connect-sdk-core-3.2.0.tgz#34febdc6e653d878dff7f2d4b97444b06da4c014"
-  integrity sha512-L++F3EPLQp8x8aE82C2Bqh49g9BkIbBA24B5g8U5C7Mmm5Vzs+l58TkLeK15CGsvmJAacaqCL1PwTE8dVdaggg==
+"@cityofzion/wallet-connect-sdk-core@3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@cityofzion/wallet-connect-sdk-core/-/wallet-connect-sdk-core-3.3.0.tgz#a9b65bdb6a9b54311830b4315a234a9aff132dd4"
+  integrity sha512-SKp3vI6bYSmc6aOq/76EjbfdRkYkcgn1GOBKHBHU2LnPr/gKIrKR+4qLkag0gX6VJRk6zoCVlWanUBiMr4z2eg==
   dependencies:
     "@cityofzion/neon-core" "5.5.1"
     "@cityofzion/neon-dappkit-types" "0.3.0"
@@ -2339,27 +2339,27 @@
     "@walletconnect/types" "2.7.3"
     typed-emitter "^2.1.0"
 
-"@cityofzion/wallet-connect-sdk-wallet-core@4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@cityofzion/wallet-connect-sdk-wallet-core/-/wallet-connect-sdk-wallet-core-4.0.1.tgz#f2356ebc46220e70d168d35ff527ab154da6d409"
-  integrity sha512-6Zawxlx9cw1nz4xI/qDV1KyqUA1OXJ6J0TZj4gtrx7lepI7uHIaFrHo/LrN1NGXd820eOzoXSazzGt7McWuFsg==
+"@cityofzion/wallet-connect-sdk-wallet-core@4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@cityofzion/wallet-connect-sdk-wallet-core/-/wallet-connect-sdk-wallet-core-4.1.0.tgz#3acc17e4ded228ddb7351ffc31f1f007945dfa4f"
+  integrity sha512-SBsxNdA61nd3g7pg/rGetwlf5zc5XCMsmc1y2cL4+gEFVK9RGsS1+H7FInbLX09XfK2RZnlQJ6bBmrfpTmn0uA==
   dependencies:
     "@cityofzion/neon-core" "5.5.1"
     "@cityofzion/neon-dappkit" "0.4.1"
     "@cityofzion/neon-js" "5.5.1"
-    "@cityofzion/wallet-connect-sdk-core" "3.2.0"
+    "@cityofzion/wallet-connect-sdk-core" "3.3.0"
     "@walletconnect/jsonrpc-utils" "^1.0.8"
     "@walletconnect/sign-client" "2.7.3"
     "@walletconnect/types" "2.7.3"
     ethers "5.7.2"
     moment "^2.29.4"
 
-"@cityofzion/wallet-connect-sdk-wallet-react@4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@cityofzion/wallet-connect-sdk-wallet-react/-/wallet-connect-sdk-wallet-react-4.0.1.tgz#b456fc4dd6ae77f84b30f9af98f160f4f50c1cb0"
-  integrity sha512-wWVRfJxPESs0Nr2emv8YbRdUGxYzeKB57QSWZBmCZMAcKyit2TPpiSr8hbwwaCOw6MsGJ6reynrbY1WFaYnzFw==
+"@cityofzion/wallet-connect-sdk-wallet-react@4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@cityofzion/wallet-connect-sdk-wallet-react/-/wallet-connect-sdk-wallet-react-4.0.3.tgz#0fdcf22300692300a42a590997bf9eacb344fcee"
+  integrity sha512-yL9iePJByFaMYH88dzCM+rs33Vr+k6hb3jmZx8snjzvAAF6OXjm7xTXckl7Hgp9xCnwJB77y4ut9UF8ooLtaDw==
   dependencies:
-    "@cityofzion/wallet-connect-sdk-wallet-core" "4.0.1"
+    "@cityofzion/wallet-connect-sdk-wallet-core" "4.1.0"
 
 "@concordance/react@^1.0.0":
   version "1.0.0"
