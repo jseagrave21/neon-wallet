@@ -127,8 +127,17 @@ export default function NFTGallery({
   isWatchOnly,
   showModal,
 }: Props) {
+  function hasUnicode(str: string) {
+    for (let i = 0; i < str.length; i += 1) {
+      if (str.charCodeAt(i) > 127) {
+        return true
+      }
+    }
+    return false
+  }
+
   function decodeTokenId(tokenId) {
-    return atob(tokenId)
+    return hasUnicode(tokenId) ? atob(tokenId) : tokenId
   }
 
   return (
