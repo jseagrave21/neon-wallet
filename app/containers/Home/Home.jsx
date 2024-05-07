@@ -13,7 +13,7 @@ import Button from '../../components/Button'
 import styles from './Home.scss'
 import AddIcon from '../../assets/icons/add.svg'
 import ImportIcon from '../../assets/icons/import.svg'
-import ExportIcon from '../../assets/icons/export.svg'
+import MigrateIcon from '../../assets/icons/migrate.svg'
 import { ROUTES, MODAL_TYPES } from '../../core/constants'
 import HomeLayout from './HomeLayout'
 import pack from '../../../package.json'
@@ -168,7 +168,7 @@ export default class Home extends React.Component<Props, State> {
             </div>
             <div className={styles.buttonContainer}>
               <Link to={ROUTES.MIGRATE_WALLETS_NEON3}>
-                <Button disabled={loading} renderIcon={ExportIcon}>
+                <Button disabled={loading} renderIcon={MigrateIcon}>
                   <FormattedMessage id="authMigrateWallets" />
                 </Button>
               </Link>
