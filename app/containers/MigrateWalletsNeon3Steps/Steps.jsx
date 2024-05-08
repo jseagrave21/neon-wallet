@@ -12,6 +12,7 @@ import { Stepper } from '../../components/Stepper'
 import MigrateWalletsNeon3Step1 from './Step1'
 import MigrateWalletsNeon3Step2 from './Step2'
 import MigrateWalletsNeon3Step3 from './Step3'
+import { useContactsContext } from '../../context/contacts/ContactsContext'
 
 type Props = {
   accounts: Object,
@@ -26,15 +27,29 @@ const MigrateWalletsNeon3Steps = ({
   theme,
   intl,
 }: Props) => {
+  const { contacts } = useContactsContext()
+
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedPath, setSelectedPath] = useState('')
 
   const handleNextStep2 = async () => {
     if (!selectedPath) return
 
+    const contactsToSave = []
+    Object.entries(contacts).forEach(([key, value]) => {
+      contactsToSave.push({
+        name: key,
+        /* $FlowFixMe */
+        addresses: value.map(({ address }) => address),
+      })
+    })
+
     await fs.writeFile(
       `${selectedPath}/NEON2-wallets-backup-${Date.now()}.json`,
-      JSON.stringify([...accounts, ...n3Accounts]),
+      JSON.stringify({
+        accounts: [...accounts, ...n3Accounts],
+        contacts: contactsToSave,
+      }),
     )
 
     setCurrentStep(3)
