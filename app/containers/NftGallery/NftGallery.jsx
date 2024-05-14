@@ -127,19 +127,6 @@ export default function NFTGallery({
   isWatchOnly,
   showModal,
 }: Props) {
-  function hasUnicode(str: string) {
-    for (let i = 0; i < str.length; i += 1) {
-      if (str.charCodeAt(i) > 127) {
-        return true
-      }
-    }
-    return false
-  }
-
-  function decodeTokenId(tokenId) {
-    return hasUnicode(tokenId) ? atob(tokenId) : tokenId
-  }
-
   return (
     <div className={styles.nftGalleryContainer}>
       <HeaderBar
@@ -191,7 +178,7 @@ export default function NFTGallery({
                         <div className={styles.tokenId}>
                           <div className={styles.collectionName}>TOKEN ID:</div>{' '}
                           <div className={styles.tokenIdContainer}>
-                            {decodeTokenId(tokenId)}
+                            {tokenId}
                           </div>
                         </div>
                         {!isWatchOnly && (
