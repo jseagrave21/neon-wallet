@@ -59,8 +59,7 @@ const ConnectDapp = ({ showErrorNotification, history }: Props) => {
     () => {
       if (!uri) return
 
-      const decoded = atob(uri)
-      handleOnURI(decoded)
+      handleOnURI(uri)
     },
     [uri, handleOnURI],
   )

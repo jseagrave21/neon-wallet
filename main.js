@@ -260,7 +260,14 @@ ipcMain.handle('dialog', async (event, method, params) => {
 })
 
 ipcMain.handle('getInitialDeepLinkUri', async () => {
-  const uri = initialDeepLinkUri
+  let uri = initialDeepLinkUri
+  if (uri && uri.startsWith('/wc?uri=')) {
+    // the new format comes with this prefix
+    uri = uri.replace('/wc?uri=', '')
+  } else {
+    // the legacy format needs to be decoded
+    uri = atob(uri)
+  }
   initialDeepLinkUri = null
   return uri
 })
