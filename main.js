@@ -262,7 +262,7 @@ ipcMain.handle('dialog', async (event, method, params) => {
 ipcMain.handle('getInitialDeepLinkUri', async () => {
   let uri = initialDeepLinkUri
   if (uri && uri.startsWith('neon://uri=/wc?uri=')) {
-    // the new format comes with this prefix
+    // the new format comes with this prefix and it's not encoded. So, we are removing the prefix and encoding, to keep the old logic working for the old format
     uri = uri.replace('/wc?uri=', '')
     uri = `neon://uri=${btoa(
       decodeURIComponent(uri.replace('neon://uri=', '')),
