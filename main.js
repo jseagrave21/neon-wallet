@@ -261,12 +261,12 @@ ipcMain.handle('dialog', async (event, method, params) => {
 
 ipcMain.handle('getInitialDeepLinkUri', async () => {
   let uri = initialDeepLinkUri
-  if (uri && uri.startsWith('/wc?uri=')) {
+  if (uri && uri.startsWith('neon://uri=/wc?uri=')) {
     // the new format comes with this prefix
     uri = uri.replace('/wc?uri=', '')
-  } else {
-    // the legacy format needs to be decoded
-    uri = atob(uri)
+    uri = `neon://uri=${btoa(
+      decodeURIComponent(uri.replace('neon://uri=', '')),
+    )}`
   }
   initialDeepLinkUri = null
   return uri
