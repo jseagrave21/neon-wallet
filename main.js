@@ -14,13 +14,11 @@ const path = require('path')
 const url = require('url')
 const { autoUpdater } = require('electron-updater')
 const log = require('electron-log')
-const { setupSentry } = require('./config/sentryElectron.setup')
 
 const port = process.env.PORT || 3000
 
 let mainWindow = null
 let initialDeepLinkUri = null
-setupSentry()
 
 if (process.defaultApp) {
   if (process.argv.length >= 2) {
@@ -262,7 +260,14 @@ ipcMain.handle('dialog', async (event, method, params) => {
 })
 
 ipcMain.handle('getInitialDeepLinkUri', async () => {
-  const uri = initialDeepLinkUri
+  let uri = initialDeepLinkUri
+  if (uri && uri.startsWith('neon://uri=/wc?uri=')) {
+    // the new format comes with this prefix and it's not encoded. So, we are removing the prefix and encoding, to keep the old logic working for the old format
+    uri = uri.replace('/wc?uri=', '')
+    uri = `neon://uri=${btoa(
+      decodeURIComponent(uri.replace('neon://uri=', '')),
+    )}`
+  }
   initialDeepLinkUri = null
   return uri
 })
