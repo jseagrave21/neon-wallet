@@ -59,8 +59,20 @@ const InvokeFunction = ({
   const { rejectRequest, approveRequest } = useWalletConnectWallet()
   const [loading, setLoading] = useState(false)
   const [fee, setFee] = useState()
-  const [transactionHash, setTransactionHash] = useState()
-  const [errorMessage, setErrorMessage] = useState()
+
+  const witnessScope = useMemo(
+    () => {
+      const scope = requestParams.signers[0]?.scopes
+      // eslint-disable-next-line no-restricted-globals
+      if (!isNaN(Number(scope))) {
+        return WITNESS_SCOPE[scope]
+      }
+
+      const allScopes = Object.values(WITNESS_SCOPE)
+      return allScopes.find(s => s === scope)
+    },
+    [requestParams],
+  )
 
   const handleCalculateFee = useCallback(
     async () => {
@@ -122,9 +134,19 @@ const InvokeFunction = ({
         hideNotification(notificationId)
       }
 
-      setTransactionHash(result)
+      history.push({
+        pathname: ROUTES.DAPP_REQUEST_RESULT,
+        state: {
+          content: <InvokeResult transactionHash={result} />,
+        },
+      })
     } catch (error) {
-      setErrorMessage(error.message)
+      history.push({
+        pathname: ROUTES.DAPP_REQUEST_RESULT,
+        state: {
+          content: <InvokeResult errorMessage={error.message} />,
+        },
+      })
     } finally {
       setLoading(false)
     }
@@ -139,11 +161,6 @@ const InvokeFunction = ({
 
   return loading ? (
     <ConnectionLoader />
-  ) : transactionHash || errorMessage ? (
-    <InvokeResult
-      transactionHash={transactionHash}
-      errorMessage={errorMessage}
-    />
   ) : (
     <FullHeightPanel
       headerText="Wallet Connect"
@@ -210,7 +227,8 @@ const InvokeFunction = ({
           />
         ))}
 
-        {request?.params?.request?.params?.signers?.length <= 1 && (
+        {/* $FlowFixMe */}
+        {witnessScope && (
           <div
             className={classNames([
               styles.detailsLabel,
@@ -219,20 +237,12 @@ const InvokeFunction = ({
             ])}
           >
             <label>signature scope</label>
-            {request.params.request.params.signers.length ? (
-              <div>
-                {
-                  WITNESS_SCOPE[
-                    String(request.params.request.params.signers[0]?.scopes)
-                  ]
-                }
-                {WITNESS_SCOPE[
-                  String(request.params.request.params.signers[0]?.scopes)
-                ] === 'Global' && <WarningIcon />}
-              </div>
-            ) : (
-              <div>{WITNESS_SCOPE['1']}</div>
-            )}
+
+            {/* $FlowFixMe */}
+            <div>
+              {witnessScope}
+              {witnessScope === 'Global' && <WarningIcon />}
+            </div>
           </div>
         )}
 

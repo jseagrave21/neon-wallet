@@ -132,6 +132,8 @@ export const ROUTES = {
   CREATE_WALLET_AUTHENTICATED: '/create-authenticated',
   IMPORT_WALLET: '/import',
   IMPORT_WALLET_AUTHENTICATED: '/import-authenticated',
+  MIGRATE_WALLETS_NEON3: '/migrate-wallets-neon3',
+  MIGRATE_WALLETS_NEON3_STEPS: '/migrate-wallets-neon3-steps',
   TOKEN_SALE: '/token-sale',
   TOKEN_SALE_CONFIRMATION: '/token-sale-confirm',
   TOKEN_SALE_FAILURE: '/token-sale-failure',
@@ -158,6 +160,7 @@ export const ROUTES = {
   CONNECT_DAPP: '/connect-dapp',
   DAPP_REQUEST: '/dapp-request',
   NFT: '/NFT',
+  DAPP_REQUEST_RESULT: '/dapp-request-result',
 }
 
 export const NOTIFICATION_LEVELS = {
@@ -393,5 +396,6 @@ export const WITNESS_SCOPE = {
   '1': 'CalledByEntry',
   '16': 'CustomContracts',
   '32': 'CustomGroups',
+  '64': 'WitnessRules',
   '128': 'Global',
 }
