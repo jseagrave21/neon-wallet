@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { useWalletConnectWallet } from '@cityofzion/wallet-connect-sdk-wallet-react'
 import { ROUTES } from '../../core/constants'
@@ -12,7 +12,6 @@ import styles from './App.scss'
 import themes from '../../themes'
 import ErrorBoundary from '../../components/ErrorBoundaries/Main'
 import FramelessNavigation from '../../components/FramelessNavigation'
-import { parseQuery } from '../../core/formatters'
 import withSettingsContext from '../../hocs/withSettingsContext'
 import { getInformationFromSession } from '../../util/walletConnect'
 
@@ -44,6 +43,10 @@ const routesWithSideBar = [
   ROUTES.NFT,
 ]
 
+function isWalletConnectUri(uri) {
+  return /^wc:.+@\d.*$/g.test(uri)
+}
+
 const App = ({
   children,
   address,
@@ -57,6 +60,24 @@ const App = ({
 }: Props) => {
   const { requests, sessions, disconnect } = useWalletConnectWallet()
   const [decodedDeeplinkUri, setDecodedDeeplinkUri] = useState(null)
+
+  const handleDeeplink = useCallback(async (uri: string) => {
+    await ipc.invoke('restore')
+
+    const realUri = uri.split('uri=').pop()
+    if (!realUri) return
+
+    const decodedUri = decodeURIComponent(realUri)
+    if (isWalletConnectUri(decodedUri)) {
+      setDecodedDeeplinkUri(decodedUri)
+      return
+    }
+
+    const decodedBase64Uri = atob(decodedUri)
+    if (isWalletConnectUri(decodedBase64Uri)) {
+      setDecodedDeeplinkUri(decodedBase64Uri)
+    }
+  }, [])
 
   useEffect(() => {
     async function handleUpgrade() {
@@ -72,22 +93,22 @@ const App = ({
     handleUpgrade()
   }, [])
 
-  useEffect(() => {
-    const listener = async (_event, uri) => {
-      await ipc.invoke('restore')
-      setDecodedDeeplinkUri(uri)
-    }
+  useEffect(
+    () => {
+      ipc.invoke('getInitialDeepLinkUri').then(handleDeeplink)
 
-    ipc.on('link', listener)
+      const listener = async (_event, uri: string) => {
+        handleDeeplink(uri)
+      }
 
-    return () => {
-      ipc.off('link', listener)
-    }
-  }, [])
+      ipc.on('link', listener)
 
-  useEffect(() => {
-    ipc.invoke('getInitialDeepLinkUri').then(setDecodedDeeplinkUri)
-  }, [])
+      return () => {
+        ipc.off('link', listener)
+      }
+    },
+    [handleDeeplink],
+  )
 
   useEffect(
     () => {
@@ -100,12 +121,9 @@ const App = ({
         return
       }
 
-      const { uri } = parseQuery(decodeURI(decodedDeeplinkUri))
-      if (!uri) return
-
       history.push({
         pathname: ROUTES.CONNECT_DAPP,
-        state: { uri },
+        state: { uri: decodedDeeplinkUri },
       })
       setDecodedDeeplinkUri(null)
     },
@@ -114,20 +132,38 @@ const App = ({
 
   useEffect(
     () => {
-      const request = requests[0]
-      if (!request) return
+      async function handle() {
+        // It is necessary to wait for the request result page to be rendered
+        await new Promise(resolve => setTimeout(resolve, 1000))
 
-      const session = sessions.find(session => session.topic === request.topic)
-      if (!session) return
+        if (history.location.pathname === ROUTES.DAPP_REQUEST) {
+          if (
+            !requests.some(
+              request => request.id === history.location?.state?.request.id,
+            )
+          ) {
+            history.push(ROUTES.DASHBOARD)
+          }
+          return
+        }
 
-      ipc.invoke('restore')
+        const request = requests[0]
+        if (!request) return
 
-      history[
-        history.location.pathname === ROUTES.DAPP_REQUEST ? 'replace' : 'push'
-      ]({
-        pathname: ROUTES.DAPP_REQUEST,
-        state: { request, session },
-      })
+        const session = sessions.find(
+          session => session.topic === request.topic,
+        )
+        if (!session) return
+
+        ipc.invoke('restore')
+
+        history.push({
+          pathname: ROUTES.DAPP_REQUEST,
+          state: { request, session },
+        })
+      }
+
+      handle()
     },
     [requests, history, sessions],
   )

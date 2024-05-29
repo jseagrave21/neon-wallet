@@ -7,7 +7,7 @@ import {
   Blockchain,
   AbstractWalletConnectNeonAdapter,
   WalletInfo,
-  TOptions,
+  TInitOptions,
 } from '@cityofzion/wallet-connect-sdk-wallet-react'
 import * as NeonJs from '@cityofzion/neon-js'
 import { MAIN_NETWORK_ID } from '../core/constants'
@@ -47,9 +47,9 @@ export function getInformationFromSession(
     (account): AccountInformation => {
       const [namespace, reference, address] = account.split(':')
 
-      const blockchain = (Object.entries(
-        blockchainsByBlockchainServiceKey,
-      ): Array<[string, Blockchain]>).find(([, value]) => value === namespace)
+      const blockchain = Object.entries(blockchainsByBlockchainServiceKey).find(
+        ([, value]) => value === namespace,
+      )
       if (!blockchain) throw new Error('Blockchain not supported')
 
       return {
@@ -105,7 +105,9 @@ export class WalletConnectNeonAdapter extends AbstractWalletConnectNeonAdapter {
   async getWalletInfo(): Promise<WalletInfo> {
     const {
       spunky: {
-        auth: { isHardwareLogin },
+        auth: {
+          data: { isHardwareLogin },
+        },
       },
     } = store.getState()
 
@@ -160,7 +162,7 @@ export class WalletConnectNeonAdapter extends AbstractWalletConnectNeonAdapter {
   }
 }
 
-export const walletConnectOptions: TOptions = {
+export const walletConnectOptions: TInitOptions = {
   clientOptions: {
     metadata: {
       name: 'Neon Wallet',
@@ -175,26 +177,32 @@ export const walletConnectOptions: TOptions = {
     relayUrl: 'wss://relay.walletconnect.com',
     logger: 'error',
   },
-  methods: [
-    'invokeFunction',
-    'testInvoke',
-    'signMessage',
-    'verifyMessage',
-    'traverseIterator',
-    'getWalletInfo',
-    'getNetworkVersion',
-    'decrypt',
-    'encrypt',
-    'decryptFromArray',
-    'calculateFee',
-    'signTransaction',
-  ],
-  autoAcceptMethods: [
-    'testInvoke',
-    'getWalletInfo',
-    'getNetworkVersion',
-    'traverseIterator',
-    'calculateFee',
-  ],
-  adapter: new WalletConnectNeonAdapter(),
+  blockchains: {
+    neo3: {
+      methods: [
+        'invokeFunction',
+        'testInvoke',
+        'signMessage',
+        'verifyMessage',
+        'traverseIterator',
+        'getWalletInfo',
+        'getNetworkVersion',
+        'decrypt',
+        'encrypt',
+        'decryptFromArray',
+        'calculateFee',
+        'signTransaction',
+        'wipeRequests',
+      ],
+      autoAcceptMethods: [
+        'testInvoke',
+        'getWalletInfo',
+        'getNetworkVersion',
+        'traverseIterator',
+        'calculateFee',
+        'wipeRequests',
+      ],
+      adapter: new WalletConnectNeonAdapter(),
+    },
+  },
 }

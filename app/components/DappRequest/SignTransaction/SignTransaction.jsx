@@ -25,7 +25,6 @@ import Info from '../../../assets/icons/info.svg'
 
 import { getNode, getRPCEndpoint } from '../../../actions/nodeStorageActions'
 import Invocation from '../components/Invocation'
-import MessageSuccess from '../MessageSuccess'
 
 const electron = require('electron')
 
@@ -59,7 +58,6 @@ const SignTransaction = ({
   const { rejectRequest, approveRequest } = useWalletConnectWallet()
   const [loading, setLoading] = useState(false)
   const [fee, setFee] = useState()
-  const [success, setSuccess] = useState(false)
 
   const handleCalculateFee = useCallback(
     async () => {
@@ -121,7 +119,10 @@ const SignTransaction = ({
         hideNotification(notificationId)
       }
 
-      setSuccess(true)
+      history.push({
+        pathname: ROUTES.DAPP_REQUEST_RESULT,
+        state: { content: 'You have successfully signed your transaction' },
+      })
     } finally {
       setLoading(false)
     }
@@ -134,10 +135,8 @@ const SignTransaction = ({
     [handleCalculateFee],
   )
 
-  return loading && !success ? (
+  return loading ? (
     <ConnectionLoader />
-  ) : success ? (
-    <MessageSuccess text="You have successfully signed your transaction" />
   ) : (
     <FullHeightPanel
       headerText="Wallet Connect"
